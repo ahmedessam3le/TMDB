@@ -74,7 +74,7 @@ class PeopleItem extends StatelessWidget {
                 SizedBox(width: 20.wp),
                 Text(
                   // character.name,
-                  '201',
+                  '203',
                   style: Theme.of(context).textTheme.headline5,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

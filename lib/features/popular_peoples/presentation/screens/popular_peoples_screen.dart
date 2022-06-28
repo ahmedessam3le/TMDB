@@ -3,7 +3,7 @@ import 'package:tmdb/core/utils/app_strings.dart';
 import 'package:tmdb/features/popular_peoples/presentation/widgets/people_item.dart';
 
 class PopularPeoplesScreen extends StatelessWidget {
-  const PopularPeoplesScreen({Key? key}) : super(key: key);
+  PopularPeoplesScreen({Key? key}) : super(key: key);
 
   Widget buildCharactersList() {
     return SingleChildScrollView(
