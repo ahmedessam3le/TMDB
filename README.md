@@ -1,6 +1,6 @@
 # tmdb
 
-A new Flutter project.
+TMDB App to display the most popular people with thier details
 
 ## Getting Started
 
