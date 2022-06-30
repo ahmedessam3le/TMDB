@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
 import 'package:tmdb/core/utils/assets_manager.dart';
+import 'package:tmdb/features/popular_peoples/domain/entities/person.dart';
 
-class PeopleItem extends StatelessWidget {
-  // final Character character;
-  // const CharacterItem({Key? key, required this.character}) : super(key: key);
+class PersonItem extends StatelessWidget {
+  final Person person;
+  const PersonItem({Key? key, required this.person}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class PeopleItem extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               // character.name,
-              'Ahmed Essam',
+              person.name,
               style: Theme.of(context).textTheme.headline5,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
@@ -74,7 +75,7 @@ class PeopleItem extends StatelessWidget {
                 SizedBox(width: 20.wp),
                 Text(
                   // character.name,
-                  '203',
+                  person.popularity.toString(),
                   style: Theme.of(context).textTheme.headline5,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

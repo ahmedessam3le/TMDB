@@ -3,13 +3,10 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:tmdb/core/api/api_consumer.dart';
-import 'package:tmdb/core/api/app_interceptors.dart';
 import 'package:tmdb/core/api/end_points.dart';
 import 'package:tmdb/core/api/status_codes.dart';
 import 'package:tmdb/core/errors/exceptions.dart';
-import 'package:tmdb/injection_container.dart' as di;
 
 class DioConsumer implements ApiConsumer {
   final Dio client;
@@ -24,16 +21,19 @@ class DioConsumer implements ApiConsumer {
 
     client.options
       ..baseUrl = EndPoints.baseUrl
-      ..responseType = ResponseType.plain
+      ..responseType = ResponseType.json
+      ..receiveTimeout = 20 * 1000
+      ..connectTimeout = 20 * 1000
+      ..sendTimeout = 20 * 1000
       ..followRedirects = false
       ..validateStatus = (status) {
         return status! < StatusCodes.internalServerError;
       };
 
-    client.interceptors.add(di.serviceLocator<AppInterceptors>());
-    if (kDebugMode) {
-      client.interceptors.add(di.serviceLocator<LogInterceptor>());
-    }
+    // client.interceptors.add(di.serviceLocator<AppInterceptors>());
+    // if (kDebugMode) {
+    //   client.interceptors.add(di.serviceLocator<LogInterceptor>());
+    // }
   }
   @override
   Future get(String path, {Map<String, dynamic>? queryParameters}) async {

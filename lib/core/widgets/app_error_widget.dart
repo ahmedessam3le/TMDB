@@ -4,8 +4,10 @@ import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
 
 class AppErrorWidget extends StatelessWidget {
+  final String message;
   final VoidCallback? onPress;
-  const AppErrorWidget({Key? key, this.onPress}) : super(key: key);
+  const AppErrorWidget({Key? key, this.onPress, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class AppErrorWidget extends StatelessWidget {
             size: 200.r,
           ),
           Text(
-            'Something Went Wrong',
+            message,
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.w700,
