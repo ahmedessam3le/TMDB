@@ -12,7 +12,7 @@ class PeopleInitialState extends PeopleStates {}
 class PeopleLoadingState extends PeopleStates {}
 
 class PeopleLoadedState extends PeopleStates {
-  final List<Person> people;
+  final PersonModel people;
 
   PeopleLoadedState({required this.people});
 

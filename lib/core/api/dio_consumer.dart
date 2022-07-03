@@ -21,14 +21,7 @@ class DioConsumer implements ApiConsumer {
 
     client.options
       ..baseUrl = EndPoints.baseUrl
-      ..responseType = ResponseType.json
-      ..receiveTimeout = 20 * 1000
-      ..connectTimeout = 20 * 1000
-      ..sendTimeout = 20 * 1000
-      ..followRedirects = false
-      ..validateStatus = (status) {
-        return status! < StatusCodes.internalServerError;
-      };
+      ..receiveDataWhenStatusError = true;
 
     // client.interceptors.add(di.serviceLocator<AppInterceptors>());
     // if (kDebugMode) {
@@ -39,7 +32,8 @@ class DioConsumer implements ApiConsumer {
   Future get(String path, {Map<String, dynamic>? queryParameters}) async {
     try {
       final response = await client.get(path, queryParameters: queryParameters);
-      return json.decode(response.data.toString());
+      // return json.decode(response.data);
+      return response.data;
     } on DioError catch (error) {
       _handleDioError(error);
     }

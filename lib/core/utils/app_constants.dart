@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
@@ -54,6 +55,14 @@ class AppConstants {
       fontSize: 18.sp,
       textColor: Colors.white,
       msg: message,
+    );
+  }
+
+  static Widget showLoadingIndicator() {
+    return Center(
+      child: SpinKitFadingCircle(
+        color: AppColors.primaryColor,
+      ),
     );
   }
 }

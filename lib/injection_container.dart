@@ -2,16 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tmdb/business_logic/cubits/people_cubit.dart';
 import 'package:tmdb/core/api/api_consumer.dart';
 import 'package:tmdb/core/api/app_interceptors.dart';
 import 'package:tmdb/core/api/dio_consumer.dart';
 import 'package:tmdb/core/network/network_info.dart';
-import 'package:tmdb/features/popular_peoples/data/data_sources/people_local_data_source.dart';
-import 'package:tmdb/features/popular_peoples/data/data_sources/people_remote_data_source.dart';
-import 'package:tmdb/features/popular_peoples/data/repositories/popular_people_repository_impl.dart';
-import 'package:tmdb/features/popular_peoples/domain/repositories/popular_people_repository.dart';
-import 'package:tmdb/features/popular_peoples/domain/use_cases/get_popular_people_use_case.dart';
-import 'package:tmdb/features/popular_peoples/presentation/cubits/people_cubit.dart';
+import 'package:tmdb/data/data_sources/people_local_data_source.dart';
+import 'package:tmdb/data/data_sources/people_remote_data_source.dart';
+import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -21,22 +19,22 @@ Future<void> init() async {
 
   serviceLocator.registerFactory<PeopleCubit>(
     () => PeopleCubit(
-      getPopularPeopleUseCase: serviceLocator(),
+      popularPeopleRepository: serviceLocator(),
     ),
   );
 
   // b) Use Cases
-
-  serviceLocator.registerLazySingleton<GetPopularPeopleUseCase>(
-    () => GetPopularPeopleUseCase(
-      peopleRepository: serviceLocator(),
-    ),
-  );
+  //
+  // serviceLocator.registerLazySingleton<GetPopularPeopleUseCase>(
+  //   () => GetPopularPeopleUseCase(
+  //     peopleRepository: serviceLocator(),
+  //   ),
+  // );
 
   // c) Repositories
 
   serviceLocator.registerLazySingleton<PopularPeopleRepository>(
-    () => PopularPeopleRepositoryImpl(
+    () => PopularPeopleRepository(
       networkInfo: serviceLocator(),
       peopleRemoteDataSource: serviceLocator(),
       peopleLocalDataSource: serviceLocator(),

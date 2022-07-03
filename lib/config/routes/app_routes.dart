@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tmdb/business_logic/cubits/people_cubit.dart';
 import 'package:tmdb/core/utils/app_strings.dart';
-import 'package:tmdb/features/popular_peoples/presentation/screens/popular_peoples_screen.dart';
-import 'package:tmdb/features/splash/presentation/screens/splash_screen.dart';
+import 'package:tmdb/injection_container.dart' as di;
+import 'package:tmdb/presentation/screens/popular_peoples_screen.dart';
+import 'package:tmdb/presentation/screens/splash_screen.dart';
 
 class Routes {
   static const String initialRoute = '/';
@@ -13,7 +16,11 @@ class AppRoutes {
     switch (routeSettings.name) {
       case Routes.popularPeoples:
         return MaterialPageRoute(
-          builder: (context) => PopularPeoplesScreen(),
+          builder: (context) => BlocProvider(
+            create: (context) =>
+                di.serviceLocator<PeopleCubit>()..getPopularPeople(),
+            child: PopularPeoplesScreen(),
+          ),
         );
 
       case Routes.initialRoute:

@@ -1,19 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdb/core/api/end_points.dart';
 import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
 import 'package:tmdb/core/utils/assets_manager.dart';
-import 'package:tmdb/features/popular_peoples/domain/entities/person.dart';
+import 'package:tmdb/data/models/results_model.dart';
 
 class PersonItem extends StatelessWidget {
-  final Person person;
+  final ResultsModel person;
   const PersonItem({Key? key, required this.person}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 400,
-      margin: EdgeInsets.symmetric(vertical: 20.r, horizontal: 20.r),
+      margin: EdgeInsets.symmetric(vertical: 10.r, horizontal: 8.r),
       padding: EdgeInsets.all(4.r),
       decoration: BoxDecoration(
         color: AppColors.hintColor,
@@ -24,22 +25,18 @@ class PersonItem extends StatelessWidget {
         //     arguments: character),
         child: GridTile(
           child: Hero(
-            // tag: character.charID,
-            tag: '1',
+            tag: person.id!,
             child: Container(
               height: double.infinity,
               color: AppColors.scaffoldBackgroundColor,
-              // child: character.image.isNotEmpty
-              //     ? FadeInImage.assetNetwork(
-              //   placeholder: ImageAssets.loadingIMG,
-              //   image: character.image,
-              //   fit: BoxFit.cover,
-              // )
-              //     : Image.asset(ImageAssets.placeHolderIMG),
-              child: Image.asset(
-                ImageAssets.placeHolderIMG,
-                fit: BoxFit.cover,
-              ),
+              child: person.profilePath != null
+                  ? CachedNetworkImage(
+                      placeholder: (context, index) =>
+                          Image.asset(ImageAssets.loadingIMG),
+                      imageUrl: EndPoints.imageUrl + person.profilePath!,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(ImageAssets.placeHolderIMG),
             ),
           ),
           header: Container(
@@ -49,10 +46,10 @@ class PersonItem extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               // character.name,
-              person.name,
+              person.name!,
               style: Theme.of(context).textTheme.headline5,
               overflow: TextOverflow.ellipsis,
-              maxLines: 2,
+              maxLines: 1,
               textAlign: TextAlign.center,
             ),
           ),
@@ -69,16 +66,16 @@ class PersonItem extends StatelessWidget {
                   'Rate',
                   style: Theme.of(context).textTheme.headline5,
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+                  maxLines: 1,
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(width: 20.wp),
                 Text(
                   // character.name,
-                  person.popularity.toString(),
+                  person.popularity!.toStringAsFixed(1),
                   style: Theme.of(context).textTheme.headline5,
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+                  maxLines: 1,
                   textAlign: TextAlign.center,
                 ),
               ],
