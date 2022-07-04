@@ -1,18 +1,39 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdb/business_logic/cubits/people_cubit.dart';
+import 'package:tmdb/core/network/network_info.dart';
 import 'package:tmdb/core/utils/app_constants.dart';
 import 'package:tmdb/core/utils/app_strings.dart';
 import 'package:tmdb/core/widgets/app_error_widget.dart';
-import 'package:tmdb/data/models/person_model.dart';
+import 'package:tmdb/data/models/results_model.dart';
+import 'package:tmdb/injection_container.dart';
 import 'package:tmdb/presentation/widgets/person_item.dart';
 
 class PopularPeoplesScreen extends StatelessWidget {
   PopularPeoplesScreen({Key? key}) : super(key: key);
 
-  Widget buildCharactersList({required PersonModel people}) {
+  final scrollController = ScrollController();
+
+  void setUpScrollController(BuildContext context) {
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels != 0) {
+          serviceLocator<NetworkInfo>().isConnected().then((value) {
+            if (value) {
+              BlocProvider.of<PeopleCubit>(context).getPopularPeople();
+            } else {
+              BlocProvider.of<PeopleCubit>(context)
+                  .emit(PeopleErrorState(message: 'No More People'));
+            }
+          });
+        }
+      }
+    });
+  }
+
+  Widget buildCharactersList({required List<ResultsModel> people}) {
     return SingleChildScrollView(
+      controller: scrollController,
       physics: BouncingScrollPhysics(),
       child: GridView.builder(
         shrinkWrap: true,
@@ -24,42 +45,60 @@ class PopularPeoplesScreen extends StatelessWidget {
           crossAxisSpacing: 1,
           mainAxisSpacing: 1,
         ),
-        itemCount: people.resultsModel!.length,
+        itemCount: people.length,
         itemBuilder: (ctx, index) {
           return PersonItem(
-            person: people.resultsModel![index],
+            person: people[index],
           );
         },
       ),
     );
   }
 
-  PersonModel? people;
+  List<ResultsModel>? people;
 
   @override
   Widget build(BuildContext context) {
+    setUpScrollController(context);
     return BlocConsumer<PeopleCubit, PeopleStates>(
       listener: (context, state) {
-        if (state is PeopleLoadedState) {
+        if (state is PeopleLoadingState) {
+          people = state.oldPeople;
+        } else if (state is PeopleLoadedState) {
           people = state.people;
+        } else if (state is PeopleErrorState && people!.isNotEmpty) {
+          AppConstants.showToast(
+              message: 'No More People', toastColor: Colors.red);
         }
       },
       builder: (context, state) {
         var cubit = PeopleCubit.of(context);
+        if (state is PeopleLoadingState && state.isFirstFetch) {
+          return AppConstants.showLoadingIndicator();
+        } else if (state is PeopleErrorState && people!.isEmpty) {
+          return AppErrorWidget(
+            message: state.message,
+            onPress: () => cubit.getPopularPeople(),
+          );
+        }
         return Scaffold(
           appBar: AppBar(
             title: Text(AppStrings.appName),
           ),
-          body: state is PeopleErrorState
-              ? AppErrorWidget(
-                  message: state.message,
-                  onPress: () => cubit.getPopularPeople(),
-                )
-              : ConditionalBuilder(
-                  condition: state is! PeopleLoadingState && people != null,
-                  builder: (context) => buildCharactersList(people: people!),
-                  fallback: (context) => AppConstants.showLoadingIndicator(),
-                ),
+          body: buildCharactersList(people: people!),
+          // body: state is PeopleErrorState
+          //     ? AppErrorWidget(
+          //         message: state.message,
+          //         onPress: () => cubit.getPopularPeople(),
+          //       )
+          //     : buildCharactersList(people: people!),
+          // : ConditionalBuilder(
+          //     condition: state is! PeopleLoadingState &&
+          //         people != null &&
+          //         !(state as PeopleLoadingState).isFirstFetch,
+          //     builder: (context) => buildCharactersList(people: people!),
+          //     fallback: (context) => AppConstants.showLoadingIndicator(),
+          //   ),
         );
       },
     );

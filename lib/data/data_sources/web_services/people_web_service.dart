@@ -3,14 +3,14 @@ import 'package:tmdb/core/api/end_points.dart';
 import 'package:tmdb/core/utils/app_strings.dart';
 import 'package:tmdb/data/models/person_model.dart';
 
-abstract class PeopleRemoteDataSource {
+abstract class PeopleWebService {
   Future<PersonModel> getPeople(int page);
 }
 
-class PeopleRemoteDataSourceImpl implements PeopleRemoteDataSource {
+class PeopleWebServiceImpl implements PeopleWebService {
   ApiConsumer apiConsumer;
 
-  PeopleRemoteDataSourceImpl({required this.apiConsumer});
+  PeopleWebServiceImpl({required this.apiConsumer});
   @override
   Future<PersonModel> getPeople(int page) async {
     final response =

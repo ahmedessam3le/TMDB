@@ -7,8 +7,8 @@ import 'package:tmdb/core/api/api_consumer.dart';
 import 'package:tmdb/core/api/app_interceptors.dart';
 import 'package:tmdb/core/api/dio_consumer.dart';
 import 'package:tmdb/core/network/network_info.dart';
-import 'package:tmdb/data/data_sources/people_local_data_source.dart';
-import 'package:tmdb/data/data_sources/people_remote_data_source.dart';
+import 'package:tmdb/data/data_sources/locale_data_source/people_local_data_source.dart';
+import 'package:tmdb/data/data_sources/web_services/people_web_service.dart';
 import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
 final serviceLocator = GetIt.instance;
@@ -43,8 +43,8 @@ Future<void> init() async {
 
   // d) Data Sources
 
-  serviceLocator.registerLazySingleton<PeopleRemoteDataSource>(
-    () => PeopleRemoteDataSourceImpl(
+  serviceLocator.registerLazySingleton<PeopleWebService>(
+    () => PeopleWebServiceImpl(
       apiConsumer: serviceLocator(),
     ),
   );

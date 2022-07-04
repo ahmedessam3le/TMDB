@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdb/core/errors/failure.dart';
 import 'package:tmdb/core/utils/app_strings.dart';
-import 'package:tmdb/data/models/person_model.dart';
+import 'package:tmdb/data/models/results_model.dart';
 import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
 part 'people_state.dart';
@@ -21,16 +21,39 @@ class PeopleCubit extends Cubit<PeopleStates> {
   int page = 1;
 
   Future<void> getPopularPeople() async {
-    emit(PeopleLoadingState());
-    Either<Failure, PersonModel> response =
-        await popularPeopleRepository.getPopularPeople(page);
+    if (state is PeopleLoadingState) return;
 
-    emit(
-      response.fold(
-        (failure) => PeopleErrorState(message: _mapFailureToMessage(failure)),
-        (people) => PeopleLoadedState(people: people),
-      ),
-    );
+    if (page <= 500) {
+      final currentState = state;
+
+      var oldPeople = <ResultsModel>[];
+
+      if (currentState is PeopleLoadedState) {
+        oldPeople = currentState.people;
+      } else if (currentState is PeopleErrorState) {
+        page = 1;
+        oldPeople = <ResultsModel>[];
+      }
+
+      emit(PeopleLoadingState(oldPeople: oldPeople, isFirstFetch: page == 1));
+
+      Either<Failure, List<ResultsModel>> response =
+          await popularPeopleRepository.getPopularPeople(page);
+
+      emit(
+        response.fold(
+          (failure) => PeopleErrorState(message: _mapFailureToMessage(failure)),
+          (people) {
+            page++;
+            final peopleList = (state as PeopleLoadingState).oldPeople;
+            peopleList.addAll(people);
+            return PeopleLoadedState(people: peopleList);
+          },
+        ),
+      );
+    } else {
+      emit(PeopleErrorState(message: 'No More People'));
+    }
   }
 
   String _mapFailureToMessage(Failure failure) {

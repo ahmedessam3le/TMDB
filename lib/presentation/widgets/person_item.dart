@@ -39,7 +39,7 @@ class PersonItem extends StatelessWidget {
                   : Image.asset(ImageAssets.placeHolderIMG),
             ),
           ),
-          header: Container(
+          footer: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             color: Colors.black54,
@@ -51,34 +51,6 @@ class PersonItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
               textAlign: TextAlign.center,
-            ),
-          ),
-          footer: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            color: Colors.black54,
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  // character.name,
-                  'Rate',
-                  style: Theme.of(context).textTheme.headline5,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(width: 20.wp),
-                Text(
-                  // character.name,
-                  person.popularity!.toStringAsFixed(1),
-                  style: Theme.of(context).textTheme.headline5,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                ),
-              ],
             ),
           ),
         ),

@@ -9,10 +9,18 @@ abstract class PeopleStates extends Equatable {
 
 class PeopleInitialState extends PeopleStates {}
 
-class PeopleLoadingState extends PeopleStates {}
+class PeopleLoadingState extends PeopleStates {
+  final List<ResultsModel> oldPeople;
+  final bool isFirstFetch;
+
+  PeopleLoadingState({required this.oldPeople, this.isFirstFetch = false});
+
+  @override
+  List<Object?> get props => [oldPeople];
+}
 
 class PeopleLoadedState extends PeopleStates {
-  final PersonModel people;
+  final List<ResultsModel> people;
 
   PeopleLoadedState({required this.people});
 
