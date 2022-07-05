@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdb/config/routes/app_routes.dart';
 import 'package:tmdb/core/api/end_points.dart';
 import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
@@ -21,8 +22,8 @@ class PersonItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: InkWell(
-        // onTap: () => Navigator.pushNamed(context, characterDetailsScreen,
-        //     arguments: character),
+        onTap: () => Navigator.of(context)
+            .pushNamed(Routes.personDetails, arguments: person),
         child: GridTile(
           child: Hero(
             tag: person.id!,
@@ -36,7 +37,10 @@ class PersonItem extends StatelessWidget {
                       imageUrl: EndPoints.imageUrl + person.profilePath!,
                       fit: BoxFit.cover,
                     )
-                  : Image.asset(ImageAssets.placeHolderIMG),
+                  : Image.asset(
+                      ImageAssets.placeHolderIMG,
+                      fit: BoxFit.cover,
+                    ),
             ),
           ),
           footer: Container(

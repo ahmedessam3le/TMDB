@@ -11,63 +11,65 @@ class AppErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.warning_amber_rounded,
-            color: AppColors.primaryColor,
-            size: 200.r,
-          ),
-          Text(
-            message,
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w700,
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
               color: AppColors.primaryColor,
+              size: 200.r,
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.hp),
-            child: Text(
-              'Please try again',
+            Text(
+              message,
               style: TextStyle(
                 fontSize: 24.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.hintColor,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryColor,
               ),
             ),
-          ),
-          Container(
-            height: 55.hp,
-            width: context.width * 0.55,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: AppColors.primaryColor,
-                onPrimary: AppColors.primaryColor,
-                elevation: 500,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50.r),
-                ),
-              ),
-              onPressed: () {
-                if (onPress != null) {
-                  onPress!();
-                }
-              },
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.hp),
               child: Text(
-                'Reload Screen',
+                'Please try again',
                 style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.hintColor,
                 ),
               ),
             ),
-          ),
-        ],
+            Container(
+              height: 55.hp,
+              width: context.width * 0.55,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors.primaryColor,
+                  onPrimary: AppColors.primaryColor,
+                  elevation: 500,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50.r),
+                  ),
+                ),
+                onPressed: () {
+                  if (onPress != null) {
+                    onPress!();
+                  }
+                },
+                child: Text(
+                  'Reload Screen',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdb/core/errors/failure.dart';
-import 'package:tmdb/core/utils/app_strings.dart';
+import 'package:tmdb/core/utils/app_constant_strings.dart';
 import 'package:tmdb/data/models/results_model.dart';
 import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
@@ -42,7 +42,8 @@ class PeopleCubit extends Cubit<PeopleStates> {
 
       emit(
         response.fold(
-          (failure) => PeopleErrorState(message: _mapFailureToMessage(failure)),
+          (failure) => PeopleErrorState(
+              message: AppConstants.mapFailureToMessage(failure)),
           (people) {
             page++;
             final peopleList = (state as PeopleLoadingState).oldPeople;
@@ -53,17 +54,6 @@ class PeopleCubit extends Cubit<PeopleStates> {
       );
     } else {
       emit(PeopleErrorState(message: 'No More People'));
-    }
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return AppStrings.serverFailure;
-      case CacheFailure:
-        return AppStrings.cacheFailure;
-      default:
-        return AppStrings.unExpectedError;
     }
   }
 }

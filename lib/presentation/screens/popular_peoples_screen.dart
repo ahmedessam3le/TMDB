@@ -22,8 +22,8 @@ class PopularPeoplesScreen extends StatelessWidget {
             if (value) {
               BlocProvider.of<PeopleCubit>(context).getPopularPeople();
             } else {
-              BlocProvider.of<PeopleCubit>(context)
-                  .emit(PeopleErrorState(message: 'No More People'));
+              PeopleCubit.of(context)
+                  .emit(PeopleErrorState(message: AppStrings.noMorePeople));
             }
           });
         }
@@ -55,7 +55,7 @@ class PopularPeoplesScreen extends StatelessWidget {
     );
   }
 
-  List<ResultsModel>? people;
+  List<ResultsModel>? people = [];
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class PopularPeoplesScreen extends StatelessWidget {
           people = state.people;
         } else if (state is PeopleErrorState && people!.isNotEmpty) {
           AppConstants.showToast(
-              message: 'No More People', toastColor: Colors.red);
+              message: AppStrings.noMorePeople, toastColor: Colors.red);
         }
       },
       builder: (context, state) {
@@ -86,19 +86,6 @@ class PopularPeoplesScreen extends StatelessWidget {
             title: Text(AppStrings.appName),
           ),
           body: buildCharactersList(people: people!),
-          // body: state is PeopleErrorState
-          //     ? AppErrorWidget(
-          //         message: state.message,
-          //         onPress: () => cubit.getPopularPeople(),
-          //       )
-          //     : buildCharactersList(people: people!),
-          // : ConditionalBuilder(
-          //     condition: state is! PeopleLoadingState &&
-          //         people != null &&
-          //         !(state as PeopleLoadingState).isFirstFetch,
-          //     builder: (context) => buildCharactersList(people: people!),
-          //     fallback: (context) => AppConstants.showLoadingIndicator(),
-          //   ),
         );
       },
     );

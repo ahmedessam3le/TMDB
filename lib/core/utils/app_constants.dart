@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tmdb/core/errors/failure.dart';
 import 'package:tmdb/core/utils/app_colors.dart';
 import 'package:tmdb/core/utils/app_responsive.dart';
+import 'package:tmdb/core/utils/app_strings.dart';
 
 class AppConstants {
   static void showErrorDialog({
@@ -69,5 +71,16 @@ class AppConstants {
   static void printFullText(String text) {
     final pattern = RegExp('.{1,800}');
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  static String mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return AppStrings.serverFailure;
+      case CacheFailure:
+        return AppStrings.cacheFailure;
+      default:
+        return AppStrings.unExpectedError;
+    }
   }
 }

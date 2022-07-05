@@ -3,12 +3,15 @@ import 'package:get_it/get_it.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tmdb/business_logic/cubits/people_cubit.dart';
+import 'package:tmdb/business_logic/cubits/person_images_cubit.dart';
 import 'package:tmdb/core/api/api_consumer.dart';
 import 'package:tmdb/core/api/app_interceptors.dart';
 import 'package:tmdb/core/api/dio_consumer.dart';
 import 'package:tmdb/core/network/network_info.dart';
 import 'package:tmdb/data/data_sources/locale_data_source/people_local_data_source.dart';
+import 'package:tmdb/data/data_sources/web_services/images_web_service.dart';
 import 'package:tmdb/data/data_sources/web_services/people_web_service.dart';
+import 'package:tmdb/data/repositories/person_images_repository.dart';
 import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
 final serviceLocator = GetIt.instance;
@@ -20,6 +23,12 @@ Future<void> init() async {
   serviceLocator.registerFactory<PeopleCubit>(
     () => PeopleCubit(
       popularPeopleRepository: serviceLocator(),
+    ),
+  );
+
+  serviceLocator.registerFactory<PersonImagesCubit>(
+    () => PersonImagesCubit(
+      personImagesRepository: serviceLocator(),
     ),
   );
 
@@ -41,6 +50,13 @@ Future<void> init() async {
     ),
   );
 
+  serviceLocator.registerLazySingleton<PersonImagesRepository>(
+    () => PersonImagesRepository(
+      networkInfo: serviceLocator(),
+      imagesWebService: serviceLocator(),
+    ),
+  );
+
   // d) Data Sources
 
   serviceLocator.registerLazySingleton<PeopleWebService>(
@@ -52,6 +68,12 @@ Future<void> init() async {
   serviceLocator.registerLazySingleton<PeopleLocalDataSource>(
     () => PeopleLocalDataSourceImpl(
       sharedPreferences: serviceLocator(),
+    ),
+  );
+
+  serviceLocator.registerLazySingleton<ImagesWebService>(
+    () => ImagesWebServiceImpl(
+      apiConsumer: serviceLocator(),
     ),
   );
 
