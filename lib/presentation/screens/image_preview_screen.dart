@@ -7,22 +7,31 @@ import 'package:tmdb/core/utils/app_strings.dart';
 import 'package:tmdb/core/utils/assets_manager.dart';
 import 'package:tmdb/data/models/images_model.dart';
 
-class ImagePreviewScreen extends StatelessWidget {
+class ImagePreviewScreen extends StatefulWidget {
   final ImageModel imageModel;
-  const ImagePreviewScreen({Key? key, required this.imageModel})
-      : super(key: key);
+  ImagePreviewScreen({Key? key, required this.imageModel}) : super(key: key);
+
+  @override
+  State<ImagePreviewScreen> createState() => _ImagePreviewScreenState();
+}
+
+class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
+  String title = '';
 
   void _downloadImage() async {
     AppConstants.showToast(
         message: AppStrings.downloading, toastColor: Colors.yellow);
     GallerySaver.saveImage(
-      EndPoints.imageUrl + imageModel.filePath!,
+      EndPoints.imageUrl + widget.imageModel.filePath!,
       // toDcim: true,
       albumName: AppStrings.appName,
     ).then((success) {
       if (success!) {
         AppConstants.showToast(
             message: AppStrings.downloaded, toastColor: Colors.green);
+        setState(() {
+          title = AppStrings.downloaded;
+        });
       } else {
         AppConstants.showToast(
             message: AppStrings.downloadFailed, toastColor: Colors.red);
@@ -32,13 +41,15 @@ class ImagePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double imageHeight = double.parse(imageModel.height!.toString());
-    double imageWidth = double.parse(imageModel.width!.toString());
+    double imageHeight = double.parse(widget.imageModel.height!.toString());
+    double imageWidth = double.parse(widget.imageModel.width!.toString());
 
     return Scaffold(
       appBar: AppBar(
+        title: Text(title),
         actions: [
           IconButton(
+            key: ValueKey('Download Button'),
             onPressed: _downloadImage,
             icon: Icon(Icons.file_download_outlined),
           ),
@@ -46,7 +57,7 @@ class ImagePreviewScreen extends StatelessWidget {
       ),
       body: Container(
         child: Hero(
-          tag: imageModel.filePath!,
+          tag: widget.imageModel.filePath!,
           child: Container(
             height: imageHeight,
             width: imageWidth,
@@ -54,7 +65,7 @@ class ImagePreviewScreen extends StatelessWidget {
               alignment: Alignment.center,
               placeholder: (context, index) =>
                   Image.asset(ImageAssets.loadingIMG),
-              imageUrl: EndPoints.imageUrl + imageModel.filePath!,
+              imageUrl: EndPoints.imageUrl + widget.imageModel.filePath!,
               fit: BoxFit.cover,
             ),
           ),

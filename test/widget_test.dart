@@ -1,29 +1,47 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tmdb/app.dart';
+import 'package:tmdb/data/models/images_model.dart';
+import 'package:tmdb/presentation/screens/image_preview_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const TmdbApp());
+  late final ImageModel imageModel;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUpAll(() {
+    HttpOverrides.global = null;
+    imageModel = ImageModel(
+        aspectRatio: 0.667,
+        height: 2785,
+        iso6391: null,
+        filePath: "/tmU9jtSs6c4ySC5eiad3aXXADan.jpg",
+        voteAverage: 5.206,
+        voteCount: 9,
+        width: 1857);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  testWidgets('should build material app with home page',
+      (WidgetTester tester) async {
+    //arrange
+    await tester.pumpWidget(TmdbApp());
+    MaterialApp materialApp = tester.widget(find.byType(MaterialApp));
+    var expectedTitle = "TMDB";
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    //assert
+    expect(materialApp.title, expectedTitle);
+  });
+
+  testWidgets('find download button and image in image preview screen',
+      (WidgetTester tester) async {
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+          MaterialApp(home: ImagePreviewScreen(imageModel: imageModel)));
+
+      expect(find.byType(IconButton), findsOneWidget);
+
+      expect(find.byType(CachedNetworkImage), findsOneWidget);
+    });
   });
 }
