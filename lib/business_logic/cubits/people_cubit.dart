@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tmdb/core/errors/failure.dart';
-import 'package:tmdb/core/utils/app_constant_strings.dart';
+import 'package:tmdb/core/utils/app_constants.dart';
 import 'package:tmdb/data/models/results_model.dart';
 import 'package:tmdb/data/repositories/popular_people_repository.dart';
 
