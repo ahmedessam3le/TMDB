@@ -14,6 +14,7 @@ class PersonImagesCubit extends Cubit<PersonImagesStates> {
       : super(PersonImagesInitialState());
 
   void getPersonImages(int personId) async {
+    emit(PersonImagesLoadingState());
     Either<Failure, List<ImageModel>> response =
         await personImagesRepository.getPersonImages(personId);
 
