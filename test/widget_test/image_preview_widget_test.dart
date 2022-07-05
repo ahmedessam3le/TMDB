@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tmdb/app.dart';
 import 'package:tmdb/data/models/images_model.dart';
 import 'package:tmdb/presentation/screens/image_preview_screen.dart';
 
@@ -21,18 +20,6 @@ void main() {
         voteCount: 9,
         width: 1857);
   });
-
-  testWidgets('should build material app with home page',
-      (WidgetTester tester) async {
-    //arrange
-    await tester.pumpWidget(TmdbApp());
-    MaterialApp materialApp = tester.widget(find.byType(MaterialApp));
-    var expectedTitle = "TMDB";
-
-    //assert
-    expect(materialApp.title, expectedTitle);
-  });
-
   testWidgets('find download button and image in image preview screen',
       (WidgetTester tester) async {
     await tester.runAsync(() async {
